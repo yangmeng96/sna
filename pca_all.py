@@ -7,7 +7,7 @@ import numpy as np
 import os
 import re
 
-def pca_load(datatype, X_train, X_test): # datatype: "binary" or "cont"
+def pca_load_all(datatype, X_train, X_test): # datatype: "binary" or "cont"
     
     # load csv files
     file_path = 'data/pca/' + datatype + '/'
