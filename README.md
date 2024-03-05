@@ -19,3 +19,11 @@ Given the mapping of "a big disease group: a few codes", we apply PCA to this gr
 ## pca_all.py
 
 We apply PCA to all the disease-related covariates and pick the top components in the downstream tasks.
+
+## lr.py
+
+Build Logistic regression model.
+
+## rf.py
+
+Build Random Forest classifier.
