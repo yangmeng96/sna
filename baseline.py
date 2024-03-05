@@ -6,7 +6,7 @@ import re
 def baseline(datatype, disease_mapping, X_train, X_test): # datatype: "binary" or "cont"
 
     # only keep demographic covariates at the beginning
-    pattern = re.compile(r'^[A-Z0-9]{3}$')
+    pattern = re.compile(r'^[A-Z0-9]{3}.*')
     demo_columns = [col for col in X_test.columns if not pattern.match(col)]
     X_train_max = X_train[demo_columns].reset_index(drop=True) 
     X_test_max = X_test[demo_columns].reset_index(drop=True)

@@ -10,21 +10,21 @@ import re
 def pca_load_all(datatype, X_train, X_test): # datatype: "binary" or "cont"
     
     # load csv files
-    file_path = 'data/pca/' + datatype + '/'
+    file_path = 'pca/' + datatype + '/'
     directory = os.path.dirname(file_path)
     if not os.path.exists(directory):
         os.makedirs(directory)
 
     try:
-        X_train_pca = pd.read_csv("data/pca/" + datatype + "/X_train.csv")
-        X_test_pca = pd.read_csv("data/pca/" + datatype + "/X_test.csv")
+        X_train_pca = pd.read_csv("pca/" + datatype + "/X_train.csv")
+        X_test_pca = pd.read_csv("pca/" + datatype + "/X_test.csv")
         print("PCA data loaded")
 
     except:
         print("PCA data not found, running PCA now...")
 
         # only apply pca to illness covariates
-        pattern = re.compile(r'^[A-Z0-9]{3}$')
+        pattern = re.compile(r'^[A-Z0-9]{3}.*')
         selected_columns = [col for col in X_test.columns if pattern.match(col)]
         unselected_columns = [col for col in X_test.columns if not pattern.match(col)]
         X_train_illness, X_test_illness = X_train[selected_columns], X_test[selected_columns]

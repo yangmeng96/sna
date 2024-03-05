@@ -7,16 +7,18 @@ import numpy as np
 import os
 import re
 
-def pca_load(datatype, disease_mapping, X_train, X_test): # datatype: "binary" or "cont"
+def pca_load(datatype, disease_mapping, X_train, X_test, code_type="short"): # datatype: "binary" or "cont"
     # load csv files
-    file_paths = ['data/pca/' + datatype + '/' + name + '/' for name in ["train", "test"]]
+    # short or full code
+    file_paths = ['pca_'+code_type+'/'+datatype+'/'+name+'/' for name in ["train", "test"]]
+    # create path is not exist
     for file_path in file_paths:
         directory = os.path.dirname(file_path)
         if not os.path.exists(directory):
             os.makedirs(directory)
         
     # only keep demographic covariates at the beginning
-    pattern = re.compile(r'^[A-Z0-9]{3}$')
+    pattern = re.compile(r'^[A-Z0-9]{3}.*')
     demo_columns = [col for col in X_test.columns if not pattern.match(col)]
     X_train_pca = X_train[demo_columns].reset_index(drop=True) 
     X_test_pca = X_test[demo_columns].reset_index(drop=True)
@@ -29,7 +31,7 @@ def pca_load(datatype, disease_mapping, X_train, X_test): # datatype: "binary" o
             print(disease + " PCA data loaded")
         except:
             print(disease + " PCA data not found, training PCA now...")
-            X_train_single, X_test_single = pca_train(datatype, disease, codes, file_paths, X_train, X_test)
+            X_train_single, X_test_single = pca_train(datatype, disease, codes, file_paths, X_train, X_test, code_type)
     
         # attach pca results back to demographic data
         X_train_pca = pd.concat(
@@ -39,7 +41,7 @@ def pca_load(datatype, disease_mapping, X_train, X_test): # datatype: "binary" o
         
     return X_train_pca, X_test_pca
 
-def pca_train(datatype, disease, codes, file_paths, X_train, X_test):
+def pca_train(datatype, disease, codes, file_paths, X_train, X_test, code_type):
     
     # only apply pca to given disease group
     X_train, X_test = X_train.loc[:, codes], X_test.loc[:, codes]
@@ -72,11 +74,11 @@ def pca_train(datatype, disease, codes, file_paths, X_train, X_test):
     print(disease + " PCA test data saved as: " + test_csv)
 
     # visualize cumulative explained variance
-    plot_cum_var_bar(explained_variance, datatype, disease)
+    plot_cum_var_bar(explained_variance, datatype, disease, code_type)
 
     return X_train_pca, X_test_pca
 
-def plot_cum_var_bar(explained_variance, datatype, disease):
+def plot_cum_var_bar(explained_variance, datatype, disease, code_type):
     # load figure
     file_path = 'figs/'
     directory = os.path.dirname(file_path)
@@ -89,6 +91,7 @@ def plot_cum_var_bar(explained_variance, datatype, disease):
     plt.figure(figsize=(10, 6))
     plt.bar(x=range(1, len(cumulative_explained_variance)+1), 
             height=cumulative_explained_variance)
+    plt.xticks(range(1, len(cumulative_explained_variance)+1))
     plt.xlabel('Number of Components')
     plt.ylabel('Cumulative Explained Variance')
     plt.title(disease + ' - Cumulative Explained Variance by PCA Components')
@@ -98,5 +101,5 @@ def plot_cum_var_bar(explained_variance, datatype, disease):
                  str(int(cumulative_explained_variance[num_pc]*100))+"%", 
                  color = 'black', fontsize=12)
 
-    plt.savefig(file_path + datatype + "_" + disease + "_pca.png") 
+    plt.savefig(file_path + datatype + "_" + disease + "_pca_" + code_type +".png") 
     plt.show()

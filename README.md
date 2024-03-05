@@ -6,7 +6,7 @@ This is the repo of Xueting Ding, Yang Meng, Liner Xiang's Stats 295 final proje
  
 1. Put the raw data (a ".sas7bdat" file) into /data path
 
-2. Run "run_experiments.ipynb", uncomment the first cell to preprocess the data
+2. Run "run_experiments.ipynb", uncomment "# preprocessing(filename)" to preprocess the data
 
 ## baseline.py
 
