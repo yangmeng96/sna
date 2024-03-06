@@ -56,8 +56,8 @@ def preprocessing(filename):
     if not os.path.exists(directory):
         os.makedirs(directory)
     stroke_data_binary.to_csv(
-        file_path + "stroke_data_binary" + filename_add*"full" + ".csv", index=False)
-    print("binary data saved as: " + file_path + "stroke_data_binary" + filename_add*"full" + ".csv")
+        file_path + "stroke_data_binary" + filename_add*"_full" + ".csv", index=False)
+    print("binary data saved as: " + file_path + "stroke_data_binary" + filename_add*"_full" + ".csv")
     stroke_data_cont.to_csv(
-        file_path + "stroke_data_cont" + filename_add*"full" + ".csv", index=False)
-    print("continuous data saved as: " + file_path + "stroke_data_binary" + filename_add*"full" + ".csv")
+        file_path + "stroke_data_cont" + filename_add*"_full" + ".csv", index=False)
+    print("continuous data saved as: " + file_path + "stroke_data_cont" + filename_add*"_full" + ".csv")

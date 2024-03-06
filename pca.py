@@ -44,7 +44,10 @@ def pca_load(datatype, disease_mapping, X_train, X_test, code_type="short"): # d
 def pca_train(datatype, disease, codes, file_paths, X_train, X_test, code_type):
     
     # only apply pca to given disease group
-    X_train, X_test = X_train.loc[:, codes], X_test.loc[:, codes]
+    regex_pattern = '|'.join(f'^{code}' for code in codes)
+    X_train = X_train.filter(regex=regex_pattern, axis=1)
+    X_test = X_test.filter(regex=regex_pattern, axis=1)
+    # X_train, X_test = X_train.loc[:, codes], X_test.loc[:, codes]
 
     # Train PCA on the Training Set
     # Standardize the training data
