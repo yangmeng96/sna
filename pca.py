@@ -7,7 +7,11 @@ import numpy as np
 import os
 import re
 
-def pca_load(datatype, disease_mapping, X_train, X_test, code_type="short"): # datatype: "binary" or "cont"
+def pca_load(datatype, disease_mapping, X_train, X_test, code_type, pc0_only=True): 
+    # datatype: "binary" or "cont"
+    # code_type: "short" or "full"
+    # pc0_only: True or False
+
     # load csv files
     # short or full code
     file_paths = ['pca_'+code_type+'/'+datatype+'/'+name+'/' for name in ["train", "test"]]
@@ -34,6 +38,12 @@ def pca_load(datatype, disease_mapping, X_train, X_test, code_type="short"): # d
             X_train_single, X_test_single = pca_train(datatype, disease, codes, file_paths, X_train, X_test, code_type)
     
         # attach pca results back to demographic data
+        if pc0_only:
+            X_train_single = X_train_single.filter(regex="(PC0)$", axis=1)
+            X_train_single.rename(columns={col: col[:-4] for col in X_train_single.columns}, inplace=True)
+            X_test_single = X_test_single.filter(regex="(PC0)$", axis=1)
+            X_test_single.rename(columns={col: col[:-4] for col in X_test_single.columns}, inplace=True)
+
         X_train_pca = pd.concat(
             [X_train_single, X_train_pca], axis=1)            
         X_test_pca = pd.concat(
