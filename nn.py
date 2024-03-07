@@ -19,33 +19,68 @@ class CustomDataset(Dataset):
         return self.features[idx], self.labels[idx]
     
 class BinaryClassifier(nn.Module):
-    def __init__(self, input_splits):
+    def __init__(self, input_splits, hidden_dim):
         super(BinaryClassifier, self).__init__()
         self.input_splits = input_splits
         self.input_layers = nn.ModuleList([
-            nn.Linear(part_size, 1) for part_size in input_splits
+            nn.Linear(part_size, hidden_dim) for part_size in input_splits
         ])
+        self.hidden_layer = nn.Linear(hidden_dim, 1)
         self.output_layer = nn.Linear(len(input_splits), 1)
 
     def forward(self, x, return_features=False):
-        input_parts = []
+        hidden_parts = []
         # Starting index for each part
         start_idx = 0
         for i, part_size in enumerate(self.input_splits):
             end_idx = start_idx + part_size
             part = x[:, start_idx:end_idx]
             # input
-            input_part_output = F.hardtanh(self.input_layers[i](part))
-            input_parts.append(input_part_output)
+            input_part_output = F.leaky_relu(self.input_layers[i](part))
+            # hidden
+            hidden_part_output = F.leaky_relu(self.hidden_layer(input_part_output))
+            hidden_parts.append(hidden_part_output)
             # Update the start index for the next part
             start_idx = end_idx
         # Concatenate the output of all parts
-        features = torch.cat(input_parts, dim=1)
+        features = torch.cat(hidden_parts, dim=1)
         # Final output
         output = torch.sigmoid(self.output_layer(features))
         if return_features:
             return output, features
         return output
+    
+
+# class BinaryClassifier(nn.Module):
+#     def __init__(self, input_splits):
+#         super(BinaryClassifier, self).__init__()
+#         self.input_splits = input_splits
+#         self.input_layers = nn.ModuleList([
+#             nn.Linear(part_size, 1) for part_size in input_splits
+#         ])
+#         self.output_layer = nn.Linear(len(input_splits), 1)
+
+#     def forward(self, x, return_features=False):
+#         input_parts = []
+#         # Starting index for each part
+#         start_idx = 0
+#         for i, part_size in enumerate(self.input_splits):
+#             end_idx = start_idx + part_size
+#             part = x[:, start_idx:end_idx]
+#             # input
+#             input_part_output = F.hardtanh(self.input_layers[i](part))
+#             input_parts.append(input_part_output)
+#             # Update the start index for the next part
+#             start_idx = end_idx
+#         # Concatenate the output of all parts
+#         features = torch.cat(input_parts, dim=1)
+#         # Final output
+#         output = torch.sigmoid(self.output_layer(features))
+#         if return_features:
+#             return output, features
+#         return output
+    
+
 
 def nn_load(datatype, disease_mapping, X_train, X_test, code_type):
     # datatype: "binary" or "cont"
@@ -78,7 +113,7 @@ def nn_load(datatype, disease_mapping, X_train, X_test, code_type):
     X_test_nn = pd.concat([test_features, X_test_demo], axis=1)
     return X_train_nn, X_test_nn
 
-def nn_train(datatype, disease_mapping, file_paths, X_train, X_test, num_epochs=51):
+def nn_train(datatype, disease_mapping, file_paths, X_train, X_test, num_epochs=201):
  
     X_train_nn, X_test_nn = pd.DataFrame({}), pd.DataFrame({})
     full_code_lens = []
@@ -106,16 +141,15 @@ def nn_train(datatype, disease_mapping, file_paths, X_train, X_test, num_epochs=
     # Create Dataset and DataLoader
     train_dataset = CustomDataset(X_train_tensor, y_train_tensor)
     test_dataset = CustomDataset(X_test_tensor, y_test_tensor)
-    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-    test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
+    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
 
     # Initialize model, loss function, and optimizer
-    model = BinaryClassifier(input_splits=full_code_lens)
+    model = BinaryClassifier(input_splits=full_code_lens, hidden_dim=16)
     criterion = nn.BCELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.0005)
+    optimizer = torch.optim.Adam(model.parameters(), lr=5e-4)
 
     # Training loop
-#     num_epochs = 51
     for epoch in range(num_epochs):
         model.train()
         for inputs, labels in train_loader:
@@ -137,7 +171,7 @@ def nn_train(datatype, disease_mapping, file_paths, X_train, X_test, num_epochs=
                 correct += (predicted == labels).sum().item()
 
         test_accuracy = correct / total
-        if epoch%10==0:
+        if epoch%5==0:
             print(f'Test Accuracy after epoch [{epoch+1}/{num_epochs}]: {test_accuracy:.4f}')
 
     print("Neural Network training finished, collecting features...")
