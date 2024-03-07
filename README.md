@@ -24,6 +24,10 @@ We apply PCA to all the disease-related covariates and pick the top components i
 
 Given the mapping of "a big disease group: a few codes", we apply a two layer neural network to this group and output a feature of this group, combine all the features for the downstream tasks.
 
+## ae.py
+
+Given the mapping of "a big disease group: a few codes", we apply a two layer autoencoder, with 1-dimensional hidden variable z for each category-based encoder, then combine all the z as the features.
+
 ## lr.py
 
 Build Logistic regression model.
