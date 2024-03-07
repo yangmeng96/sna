@@ -20,6 +20,10 @@ Given the mapping of "a big disease group: a few codes", we apply PCA to this gr
 
 We apply PCA to all the disease-related covariates and pick the top components in the downstream tasks.
 
+## nn.py
+
+Given the mapping of "a big disease group: a few codes", we apply a two layer neural network to this group and output a feature of this group, combine all the features for the downstream tasks.
+
 ## lr.py
 
 Build Logistic regression model.
