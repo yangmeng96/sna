@@ -60,7 +60,7 @@ def nn_separate_load(datatype, disease_mapping, X_train, X_test, code_type):
     
     # load csv files
     # short or full code
-    file_paths = ['nn_'+code_type+'/'+datatype+'/'+name+'/' for name in ["train", "test"]]
+    file_paths = ['nn_rf'+code_type+'/'+datatype+'/'+name+'/' for name in ["train", "test"]]
     # create path is not exist
     for file_path in file_paths:
         directory = os.path.dirname(file_path)
