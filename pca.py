@@ -81,10 +81,10 @@ def pca_train(datatype, disease, codes, file_paths, X_train, X_test, code_type):
     # save csv files
     train_csv = file_paths[0] + disease + ".csv"
     test_csv = file_paths[1] + disease + ".csv"
-    X_train_pca.to_csv(train_csv, index=False)
-    print(disease + " PCA training data saved as: " + train_csv)
-    X_test_pca.to_csv(test_csv, index=False)
-    print(disease + " PCA test data saved as: " + test_csv)
+    # X_train_pca.to_csv(train_csv, index=False)
+    # print(disease + " PCA training data saved as: " + train_csv)
+    # X_test_pca.to_csv(test_csv, index=False)
+    # print(disease + " PCA test data saved as: " + test_csv)
 
     # visualize cumulative explained variance
     plot_cum_var_bar(explained_variance, datatype, disease, code_type)

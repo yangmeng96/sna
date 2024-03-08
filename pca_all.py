@@ -58,10 +58,10 @@ def pca_load_all(datatype, X_train, X_test): # datatype: "binary" or "cont"
         X_test_pca = pd.concat([X_test_pca, X_test_demo.reset_index(drop=True)], axis=1)
 
         # save csv files
-        X_train_pca.to_csv(file_path + "X_train.csv", index=False)
-        print("PCA training data saved as: " + file_path + "X_train.csv")
-        X_test_pca.to_csv(file_path + "X_test.csv", index=False)
-        print("PCA test data saved as: " + file_path + "X_test.csv")
+        # X_train_pca.to_csv(file_path + "X_train.csv", index=False)
+        # print("PCA training data saved as: " + file_path + "X_train.csv")
+        # X_test_pca.to_csv(file_path + "X_test.csv", index=False)
+        # print("PCA test data saved as: " + file_path + "X_test.csv")
         
         # visualize cumulative explained variance
         plot_cum_var(explained_variance, datatype)

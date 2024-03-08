@@ -187,9 +187,9 @@ def ae_train(datatype, disease_mapping, file_paths, X_train, X_test, num_epochs=
     # save csv files
     train_csv = file_paths[0] + "features.csv"
     test_csv = file_paths[1] + "features.csv"
-    train_features.to_csv(train_csv, index=False)
-    print("AE feature training data saved as: " + train_csv)
-    test_features.to_csv(test_csv, index=False)
-    print("AE feature test data saved as: " + test_csv)
+    # train_features.to_csv(train_csv, index=False)
+    # print("AE feature training data saved as: " + train_csv)
+    # test_features.to_csv(test_csv, index=False)
+    # print("AE feature test data saved as: " + test_csv)
     
     return train_features, test_features
