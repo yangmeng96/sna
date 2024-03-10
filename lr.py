@@ -9,7 +9,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
+from sklearn.metrics import roc_curve, auc
 import matplotlib.pyplot as plt
+import statsmodels.api as sm
 
 
 
@@ -36,5 +38,60 @@ def LR(train,test,tolerance,iter,seed):
     model = LogisticRegression(solver='saga', tol = tolerance, max_iter = iter, random_state = seed)
     model.fit(X_train, Y_train)
     Y_pred = model.predict(X_test)
+    Y_scores = model.predict_proba(X_test)[:, 1] 
+    FN = sum((Y_test == 1) & (Y_pred == 0))
+    TP = sum((Y_test == 1) & (Y_pred == 1))
+    recall = TP/(FN+TP)
+    accuracy = accuracy_score(Y_test, Y_pred)
+
     print(model.coef_)
-    print("Accuracy:", accuracy_score(Y_test, Y_pred))
+    print("Accuracy:", accuracy)
+    print("Recall:", recall)
+    return(Y_scores, accuracy, recall)
+
+
+
+# Y_scores = model.predict_proba(X_test)[:, 1] 
+
+# fpr, tpr, _ = roc_curve(Y_test, Y_scores)
+
+# roc_auc = auc(fpr, tpr)
+
+# plt.figure()
+# plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
+# plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+# plt.xlim([0.0, 1.0])
+# plt.ylim([0.0, 1.05])
+# plt.xlabel('False Positive Rate')
+# plt.ylabel('True Positive Rate')
+# plt.title('Receiver operating characteristic example')
+# plt.legend(loc="lower right")
+# plt.show()
+
+
+
+# def LR_P(train,test):
+#     Y_train = train["recur"]
+#     X_train = train.drop(['recur_same','recur','stroke_date','patient_id'], axis=1)
+#     Y_test = test["recur"]
+#     X_test = test.drop(['recur_same','recur','stroke_date','patient_id'], axis=1)
+
+#     X_train = sm.add_constant(pd.get_dummies(X_train, columns=['stroke_subtype', 'sex', 'race'])).astype(float)
+#     X_test = sm.add_constant(pd.get_dummies(X_test, columns=['stroke_subtype', 'sex', 'race'])).astype(float)
+#     #print(X_train)
+#     model = sm.Logit(Y_train, X_train)
+#     result = model.fit(method='powell', maxiter=100000, epsilon=1e-4)
+#     print(result.summary())
+#     Y_pred = result.predict(X_test)
+
+#     Y_pred_class = [1 if prob > 0.5 else 0 for prob in Y_pred]
+#     accuracy = accuracy_score(Y_test,Y_pred_class)
+#     print(f"Accuracy: {accuracy}")
+
+
+# LR_P(train,test)
+
+
+
+  
+
