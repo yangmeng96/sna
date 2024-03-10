@@ -12,7 +12,7 @@ def ROC(Y_test, Y_scores, method, clf, seed):
     
     plt.figure(figsize=(6, 4))
 
-    for i, preds in enumerate(Y_scores):
+    for i, preds in enumerate(Y_scores[:len(method)]):
       fpr, tpr, _= roc_curve(Y_test, preds)
       roc_auc = auc(fpr, tpr)
       plt.plot(fpr, tpr, label=f'{method[i]} (AUC = {roc_auc:.3f})')
@@ -26,6 +26,5 @@ def ROC(Y_test, Y_scores, method, clf, seed):
 
     plt.legend(loc="lower right")
     print(f'Seed: {seed}')
-    plt.savefig(f'{file_path}{clf}_{seed}.png') 
+    plt.savefig(f'{file_path}{clf}_{seed}_{len(method)}.png') 
     plt.show()
-
