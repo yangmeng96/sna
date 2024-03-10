@@ -29,14 +29,21 @@ def RF(train,test,params):
 
     X_train = pd.get_dummies(X_train, columns=['stroke_subtype', 'sex', 'race'])
     X_test = pd.get_dummies(X_test, columns=['stroke_subtype', 'sex', 'race'])
-    #print(X_train)
-    #print(X_test)
 
     grid_search = GridSearchCV(estimator=RandomForestClassifier(), param_grid=params, cv=5, n_jobs=-1, verbose=1, scoring='accuracy')
     grid_search.fit(X_train, Y_train)
     model = grid_search.best_estimator_
 
     Y_pred = model.predict(X_test)
+    Y_scores = model.predict_proba(X_test)[:, 1] 
+    FN = sum((Y_test == 1) & (Y_pred == 0))
+    TP = sum((Y_test == 1) & (Y_pred == 1))
+    recall = TP/(FN+TP)
+    accuracy = accuracy_score(Y_test, Y_pred)
+
     print("Best params:", grid_search.best_params_)
     print("Accuracy:", accuracy_score(Y_test, Y_pred))
+    print("Recall:", recall)
+    return(Y_scores, accuracy, recall)
+
 
