@@ -11,11 +11,12 @@ def ROC(Y_test, Y_scores, method, clf, seed):
         os.makedirs(directory)
     
     plt.figure(figsize=(6, 4))
+    colors = ['purple', 'blue', 'green', 'orange', 'red']
 
     for i, preds in enumerate(Y_scores[:len(method)]):
       fpr, tpr, _= roc_curve(Y_test, preds)
       roc_auc = auc(fpr, tpr)
-      plt.plot(fpr, tpr, label=f'{method[i]} (AUC = {roc_auc:.3f})')
+      plt.plot(fpr, tpr, label=f'{method[i]} (AUC = {roc_auc:.3f})', color=colors[i])
 
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
