@@ -1,4 +1,4 @@
-# Stats 295 Final
+# Segmented Neural Network-Driven Risk Factor Aggregation
 
 This is the repo of Xueting Ding, Yang Meng, Liner Xiang's Stats 295 final project.
  
@@ -20,13 +20,13 @@ Given the mapping of "a big disease group: a few codes", we apply PCA to this gr
 
 We apply PCA to all the disease-related covariates and pick the top components in the downstream tasks.
 
-## nn.py
-
-Given the mapping of "a big disease group: a few codes", we apply a two layer neural network to this group and output a feature of this group, combine all the features for the downstream tasks.
-
 ## ae.py
 
 Given the mapping of "a big disease group: a few codes", we apply a two layer autoencoder, with 1-dimensional hidden variable z for each category-based encoder, then combine all the z as the features.
+
+## nn.py
+
+Given the mapping of "a big disease group: a few codes", we apply a two layer neural network to this group and output a feature of this group, combine all the features for the downstream tasks.
 
 ## lr.py
 
