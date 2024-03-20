@@ -4,9 +4,11 @@ This is the repo of Xueting Ding, Yang Meng, Liner Xiang's Stats 295 final proje
  
 ## To run the experiments:
  
-1. Put the raw data (a ".sas7bdat" file) into /data path
+1. Run "raw_data_preprocessing.sas" and output a cleaned research file.
 
-2. Run "run_experiments.ipynb", uncomment "# preprocessing(filename)" to preprocess the data
+2. Put the raw data (a ".sas7bdat" file) into /data path
+
+3. Run "run_experiments.ipynb", uncomment "# preprocessing(filename)" to preprocess the data
 
 ## baseline.py
 
