@@ -25,13 +25,13 @@ import statsmodels.api as sm
     # seed: the random seed.
 
 def LR(train,test,tolerance,iter,seed):
-    Y_train = train["recur"]
-    X_train = train.drop(['recur_same','recur','stroke_date','patient_id'], axis=1)
-    Y_test = test["recur"]
-    X_test = test.drop(['recur_same','recur','stroke_date','patient_id'], axis=1)
+    Y_train = train["recur_90"]
+    X_train = train.drop(['recur_same','recur_30','recur_60','recur_90','stroke_date','patient_id','his_date'], axis=1)
+    Y_test = test["recur_90"]
+    X_test = test.drop(['recur_same','recur_30','recur_60','recur_90','stroke_date','patient_id',"his_date"], axis=1)
 
-    X_train = pd.get_dummies(X_train, columns=['stroke_subtype', 'sex', 'race'])
-    X_test = pd.get_dummies(X_test, columns=['stroke_subtype', 'sex', 'race'])
+    X_train = pd.get_dummies(X_train, columns=['stroke_subtype', 'sex', 'race','patient_regional_location'])
+    X_test = pd.get_dummies(X_test, columns=['stroke_subtype', 'sex', 'race','patient_regional_location'])
     #print(X_train)
     #print(X_test)
 
