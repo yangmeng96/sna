@@ -32,7 +32,7 @@ def preprocessing(filename):
         # NA to 0: no illness
         # negative values to 0: in the future yes, but not at that moment, so we do not know
         # positive values or 0 to 1: had the illness during the past month (including the current day)
-    stroke_data_binary = stroke_data_illness.applymap(lambda x: 0 if pd.isna(x) or x > 0 else 1)
+    stroke_data_binary = stroke_data_illness.applymap(lambda x: 0 if pd.isna(x) else 1)
     stroke_data_binary = pd.concat([stroke_data_binary, stroke_data_demo], axis=1)
     print("binary data created")
 
